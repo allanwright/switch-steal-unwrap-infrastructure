@@ -20,4 +20,4 @@ jobs:
       - name: Synth stack
         run: yarn cdk synth
       - name: Deploy stack
-        run: yarn cdk deploy --all --require-approval never --parameters domains="stealy.link,www.stealy.link" --parameters certificateArn=arn:aws:acm:ap-southeast-2:645549479777:certificate/864eb311-e399-4651-984e-0fdf424a2c57 --parameters hostedZoneId=Z044956514TIJL09PO03H --parameters zoneName=stealy.link
+        run: yarn cdk deploy --all --require-approval never --parameters domains="stealy.link,www.stealy.link" --parameters certificateArn=arn:aws:acm:us-east-1:645549479777:certificate/86e543ec-e9cd-4c00-af8d-152b4b2e58ad --parameters hostedZoneId=Z044956514TIJL09PO03H --parameters zoneName=stealy.link
