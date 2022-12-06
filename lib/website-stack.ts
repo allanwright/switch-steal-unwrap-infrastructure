@@ -15,6 +15,7 @@ export class WebsiteStack extends cdk.Stack {
     const domains = new cdk.CfnParameter(this, "domains", { type: "CommaDelimitedList" });
     const certificateArn = new cdk.CfnParameter(this, "certificateArn");
     const hostedZoneId = new cdk.CfnParameter(this, "hostedZoneId");
+    const zoneName = new cdk.CfnParameter(this, "zoneName");
 
     const bucket = new s3.Bucket(this, "website", {
       bucketName: "website",
@@ -32,8 +33,11 @@ export class WebsiteStack extends cdk.Stack {
       certificate: certificate
     });
 
-    const zone = route53.HostedZone.fromHostedZoneId(
-      this, "hosted-zone", hostedZoneId.valueAsString);
+    const zone = route53.HostedZone.fromHostedZoneAttributes(
+      this, "hosted-zone", {
+        hostedZoneId: hostedZoneId.valueAsString,
+        zoneName: zoneName.valueAsString
+      });
     
     new route53.ARecord(this, "ARecord", {
       zone: zone,
