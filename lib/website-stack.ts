@@ -18,7 +18,6 @@ export class WebsiteStack extends cdk.Stack {
     const zoneName = new cdk.CfnParameter(this, "zoneName");
 
     const bucket = new s3.Bucket(this, "website", {
-      bucketName: "website",
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
