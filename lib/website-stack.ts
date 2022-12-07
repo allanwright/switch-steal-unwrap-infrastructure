@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as s3 from "aws-cdk-lib/aws-s3";
@@ -47,6 +48,16 @@ export class WebsiteStack extends cdk.Stack {
     new route53.AaaaRecord(this, "AAAARecord", {
       zone: zone,
       target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution))
+    });
+
+    new iam.Policy(this, "WebsiteDeploymentPolicy", {
+      statements: [
+        new iam.PolicyStatement({
+          actions: ["s3:PutObject"],
+          effect: iam.Effect.ALLOW,
+          resources: [bucket.arnForObjects("*")]
+        })
+      ]
     });
   }
 }
