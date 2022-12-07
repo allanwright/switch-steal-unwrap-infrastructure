@@ -17,6 +17,7 @@ export class WebsiteStack extends cdk.Stack {
     const certificateArn = new cdk.CfnParameter(this, "certificateArn");
     const hostedZoneId = new cdk.CfnParameter(this, "hostedZoneId");
     const zoneName = new cdk.CfnParameter(this, "zoneName");
+    const deploymentUserArn = new cdk.CfnParameter(this, "deploymentUserArn");
 
     const bucket = new s3.Bucket(this, "website", {
       removalPolicy: cdk.RemovalPolicy.DESTROY
@@ -50,14 +51,20 @@ export class WebsiteStack extends cdk.Stack {
       target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution))
     });
 
-    new iam.Policy(this, "WebsiteDeploymentPolicy", {
-      statements: [
-        new iam.PolicyStatement({
-          actions: ["s3:PutObject"],
-          effect: iam.Effect.ALLOW,
-          resources: [bucket.arnForObjects("*")]
+    new iam.Role(this, "WebsiteDeploymentRole", {
+      assumedBy: new iam.ArnPrincipal(deploymentUserArn.valueAsString),
+      description: "IAM role for deploying static website assets to s3 bucket",
+      inlinePolicies: {
+        WebsiteDeploymentPolicy: new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              actions: ["s3:PutObject"],
+              effect: iam.Effect.ALLOW,
+              resources: [bucket.arnForObjects("*")]
+            })
+          ]
         })
-      ]
+      }
     });
   }
 }
