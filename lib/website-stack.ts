@@ -26,7 +26,8 @@ export class WebsiteStack extends cdk.Stack {
     
     const distribution = new cloudfront.Distribution(this, "distribution", {
       defaultBehavior: {
-        origin: new origins.S3Origin(bucket)
+        origin: new origins.S3Origin(bucket),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
       },
       domainNames: domains.valueAsList,
       certificate: certificate
