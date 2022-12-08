@@ -32,7 +32,8 @@ export class WebsiteStack extends cdk.Stack {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
       },
       domainNames: domains.valueAsList,
-      certificate: certificate
+      certificate: certificate,
+      defaultRootObject: "index.html"
     });
 
     const zone = route53.HostedZone.fromHostedZoneAttributes(
