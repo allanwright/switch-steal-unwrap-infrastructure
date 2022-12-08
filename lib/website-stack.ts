@@ -51,28 +51,26 @@ export class WebsiteStack extends cdk.Stack {
       target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution))
     });
 
-    new iam.Role(this, "WebsiteDeploymentRole", {
-      assumedBy: new iam.ArnPrincipal(deploymentUserArn.valueAsString),
-      description: "IAM role for deploying static website assets to s3 bucket",
-      inlinePolicies: {
-        WebsiteDeploymentPolicy: new iam.PolicyDocument({
-          statements: [
-            new iam.PolicyStatement({
-              actions: ["s3:ListBucket"],
-              effect: iam.Effect.ALLOW,
-              resources: [bucket.bucketArn]
-            }),
-            new iam.PolicyStatement({
-              actions: [
-                "s3:DeleteObject",
-                "s3:PutObject"
-              ],
-              effect: iam.Effect.ALLOW,
-              resources: [bucket.arnForObjects("*")]
-            })
-          ]
-        })
-      }
-    });
+    const group = new iam.Group(this, "WebsiteDeploymentGroup", {});
+
+    group.attachInlinePolicy(new iam.Policy(this, "WebsiteDeploymentPolicy", {
+      document: new iam.PolicyDocument({
+        statements: [
+          new iam.PolicyStatement({
+            actions: ["s3:ListBucket"],
+            effect: iam.Effect.ALLOW,
+            resources: [bucket.bucketArn]
+          }),
+          new iam.PolicyStatement({
+            actions: [
+              "s3:DeleteObject",
+              "s3:PutObject"
+            ],
+            effect: iam.Effect.ALLOW,
+            resources: [bucket.arnForObjects("*")]
+          })
+        ]
+      })
+    }));
   }
 }
