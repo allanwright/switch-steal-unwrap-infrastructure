@@ -58,7 +58,15 @@ export class WebsiteStack extends cdk.Stack {
         WebsiteDeploymentPolicy: new iam.PolicyDocument({
           statements: [
             new iam.PolicyStatement({
-              actions: ["s3:PutObject"],
+              actions: ["s3:ListBucket"],
+              effect: iam.Effect.ALLOW,
+              resources: [bucket.bucketArn]
+            }),
+            new iam.PolicyStatement({
+              actions: [
+                "s3:DeleteObject",
+                "s3:PutObject"
+              ],
               effect: iam.Effect.ALLOW,
               resources: [bucket.arnForObjects("*")]
             })
