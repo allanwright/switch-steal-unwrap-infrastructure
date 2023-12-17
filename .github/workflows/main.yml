@@ -24,6 +24,6 @@ jobs:
           --require-approval never
           --parameters domains="stealy.link,www.stealy.link"
           --parameters certificateArn=arn:aws:acm:ap-southeast-2:645549479777:certificate/ec85b953-00cb-4928-8310-8805f0c280ce
-          --parameters hostedZoneId=Z098315023ZPG2JUPTUO5
+          --parameters hostedZoneId=Z0660820WP0AWMTLH393
           --parameters zoneName=stealy.link
           --parameters deploymentUserArn=arn:aws:iam::645549479777:user/GithubActions
